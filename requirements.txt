@@ -1,0 +1,19 @@
+# Core dependencies
+python-telegram-bot>=21.0
+httpx>=0.27.0
+aiohttp>=3.9.0
+python-dotenv>=1.0.0
+pydantic>=2.7.0
+pydantic-settings>=2.2.0
+
+# Academic literature and report generation
+markdown>=3.6
+fpdf2>=2.7.9
+reportlab>=4.2.0
+
+# Optional Web Dashboard
+uvicorn>=0.30.0
+
+# Testing
+pytest>=8.0.0
+pytest-asyncio>=0.23.0

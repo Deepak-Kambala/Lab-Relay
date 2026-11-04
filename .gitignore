@@ -1,0 +1,83 @@
+# Environment and Secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Testing and Coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+
+# Logs and Runtime
+*.log
+bot.log
+log/
+logs/
+
+# Scratch and Workspace Temp
+scratch/*
+!scratch/.gitkeep
+tmp/
+temp/
+
+# Generated Output Reports (keep directory structure via .gitkeep)
+reports/markdown/*.md
+reports/pdf/*.pdf
+!reports/markdown/.gitkeep
+!reports/pdf/.gitkeep
+
+# macOS System Files
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Editor and IDE Settings
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
