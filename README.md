@@ -163,6 +163,85 @@ When a research query is submitted via Telegram:
 
 ---
 
+## 📱 Telegram Bot Setup & Configuration
+
+LabRelay uses Telegram as its real-time conversational front-end for initiating research tasks, streaming agent stage transitions, and delivering synthesized research reports.
+
+### 1. Create a Bot via @BotFather
+1. Open Telegram and search for [@BotFather](https://t.me/BotFather) (or open `https://t.me/BotFather`).
+2. Start a chat and send the command:
+   ```text
+   /newbot
+   ```
+3. **Choose a Name**: Enter a friendly name, e.g., `LabRelay Research Bot`.
+4. **Choose a Username**: Enter a unique username ending in `bot`, e.g., `my_labrelay_bot` or `deepak_labrelay_bot`.
+5. **Save the API Token**: BotFather will reply with your HTTP API token formatted like:
+   ```text
+   1234567890:ABCdefGhIJKlmNoPQRsTUVwxyZ
+   ```
+   > [!IMPORTANT]
+   > Keep this token secure and **never** commit it to GitHub. It will be stored exclusively in your local `.env` file.
+
+---
+
+### 2. Configure Command Autocomplete Menu
+To enable command suggestions in the Telegram chat UI:
+
+1. In [@BotFather](https://t.me/BotFather), send `/setcommands`.
+2. Select your newly created bot.
+3. Paste the following command list into the chat:
+   ```text
+   start - Introduction and getting started guide
+   help - List of available commands and usage instructions
+   research - Start multi-agent academic research on a question
+   status - Inspect current research progress and active Switch agent
+   report - Download the latest generated Markdown and PDF reports
+   cancel - Abort currently executing research workflow
+   reset - Clear workflow context and restart fresh
+   ```
+
+---
+
+### 3. Set Bot Profile & Description (Optional)
+In [@BotFather](https://t.me/BotFather), you can optionally polish the bot's appearance:
+* `/setdescription` — Text shown on the empty chat screen before the user taps **Start** (e.g. *"Multi-Agent AI Research Workspace powered by SandboxAQ Switch"*).
+* `/setabouttext` — Brief bio visible on the bot's profile page.
+* `/setuserpic` — Upload an avatar image for your bot.
+
+---
+
+### 4. Configure Local Environment (`.env`)
+Add your bot credentials to `.env` in the root of the repository:
+
+```env
+# Telegram Bot Credentials
+TELEGRAM_BOT_TOKEN=1234567890:ABCdefGhIJKlmNoPQRsTUVwxyZ
+TELEGRAM_BOT_USERNAME=deepak_labrelay_bot
+
+# Optional Security Access Control:
+# Leave empty to allow any user, or restrict by comma-separated User IDs / Usernames:
+# TELEGRAM_ALLOWED_USERS=123456789,@your_username
+```
+
+---
+
+### 5. Start Long-Polling
+Launch the bot runner:
+```bash
+./venv/bin/python3 -m labrelay.app
+```
+Once connected, the console outputs:
+```text
+=======================================================
+🚀 LabRelay Multi-Agent Research Workspace is ACTIVE!
+🤖 Telegram Bot: https://t.me/deepak_labrelay_bot
+🔌 Switch Engine: http://127.0.0.1:63457
+=======================================================
+```
+You can now open `https://t.me/<your_bot_username>` and send `/start` or `/research <question>`.
+
+---
+
 ## 🚀 Quick Start
 
 ### 1. Prerequisites
