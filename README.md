@@ -75,6 +75,94 @@ Every stage records its input, output, executing agent, and timestamps.
 
 ---
 
+## 🔌 SandboxAQ Switch Setup & Integration
+
+LabRelay uses **SandboxAQ Switch** as its multi-agent communication fabric, room management layer, and agent coordination bus.
+
+### 1. Switch Architecture & Port Allocations
+A standard local Switch installation consists of:
+
+| Component | Default Endpoint / Port | Purpose |
+|---|---|---|
+| **Switch Core API** | `http://127.0.0.1:63457` | Gateway auth, agent registration, room creation, and REST operations |
+| **PostgreSQL Event Bus** | `127.0.0.1:63459` | High-throughput `LISTEN/NOTIFY` channel for room activity and signals |
+| **Collaboration Gateway** | `127.0.0.1:63456` | Inbound callbacks and external messaging bridges |
+| **Agent WebSocket Bus** | `ws://127.0.0.1:63457/agents/{id}/connection/ws` | Real-time presence, bi-directional event streaming, and targeted handoffs |
+
+---
+
+### 2. How to Start Switch
+
+Depending on your installation, you can run Switch via the desktop application or headless CLI:
+
+#### Method A: Using Switch Console (Desktop App)
+1. Launch **Switch Console.app** on macOS:
+   ```bash
+   open -a "Switch Console"
+   ```
+2. The desktop console automatically initializes the local PostgreSQL engine and starts Switch Core on port `63457`.
+
+#### Method B: Headless Native Services (Terminal / Background)
+If running headless or on a development workstation without the GUI open:
+
+```bash
+# 1. Start the Switch PostgreSQL Database Engine
+"$HOME/Library/Application Support/switchdash/local-switch-server/native/toolchain/bundle-28d02ed370b4/postgres/bin/pg_ctl" \
+  -D "$HOME/Library/Application Support/switchdash/local-switch-server/native/pgdata" \
+  -l "$HOME/Library/Application Support/switchdash/local-switch-server/native/logs/postgres.log" start
+
+# 2. Launch the Switch Core Server Daemon
+env $(cat "$HOME/Library/Application Support/switchdash/local-switch-server/native/run/switch-core.env" | grep -v '^#' | xargs) \
+  "$HOME/Library/Application Support/switchdash/local-switch-server/native/switch-core/0.31.0/venv/bin/switch-core"
+```
+
+---
+
+### 3. Verifying Switch Health & Readiness
+
+Confirm both the server and event bus are healthy before starting LabRelay:
+
+```bash
+# Check basic API availability
+curl -s http://127.0.0.1:63457/health
+# Expected: {"status":"ok"}
+
+# Verify readiness of database, listeners, and bridges
+curl -s http://127.0.0.1:63457/health/ready
+```
+
+A healthy response confirms all subsystems are operational:
+```json
+{
+  "status": "ready",
+  "checks": {
+    "database": { "healthy": true },
+    "message_listener": { "healthy": true },
+    "session_activity_listener": { "healthy": true },
+    "agent_event_listener": { "healthy": true },
+    "signal_bus": { "healthy": true },
+    "bridges": { "healthy": true },
+    "connectors": { "healthy": true }
+  }
+}
+```
+
+---
+
+### 4. How LabRelay Interacts with Switch
+When a research query is submitted via Telegram:
+
+1. **Authentication (`/gateway/admin/login`)**:
+   LabRelay authenticates using the gateway admin credentials and acquires a session cookie.
+2. **Team Registration (`/gateway/agents/register-other`)**:
+   Registers the four agents (`research-scout`, `research-skeptic`, `research-experimenter`, `research-reviewer`) and provisions dedicated API keys.
+3. **Room Provisioning (`POST /gateway/chats`)**:
+   Spins up an isolated collaboration chat room for the specific research workflow (e.g. `LabRelay Research: what if...`).
+4. **Targeted Agent Handoffs (`/ops/send_targeted_message`)**:
+   Agents communicate in sequence through targeted room mentions (`send_targeted_message`), allowing full observability of the reasoning chain.
+
+---
+
 ## 🚀 Quick Start
 
 ### 1. Prerequisites
