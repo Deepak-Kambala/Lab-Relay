@@ -330,8 +330,7 @@ tests/test_workflow.py::test_workflow_model PASSED
 
 ---
 
-## 🏆 Hackathon Submission
-
 Built for the **Flip the Switch Hackathon** powered by SandboxAQ Switch.
+
 
 
